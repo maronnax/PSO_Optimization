@@ -6,25 +6,25 @@
 #include <cmath>
 using namespace std;
 
-
 main(int argc, char* argv[]) {
 
   MPI_Init(&argc, &argv);
   int rank, number_procs;
+
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &number_procs);
   cout << "rank = " << rank << " number_procs= " << number_procs << endl;
   cout.flush();
   MPI_Barrier(MPI_COMM_WORLD);
 
-  int max_iterations = 2;
+  int max_iterations = 2000;
   bool finished=false;
   char command[180];
   int command_rv, scoop_rv;
   int iteration=0;
-
+  
   while (!finished) {
-    cout << " rank=" << rank << " beginning iteration=" << iteration << endl;
+    cout << " rank=" << rank << " beginning parallel run job iteration=" << iteration << endl;
     cout.flush();
 
     sprintf(command, "./parallelEPrun.py %d", rank);

@@ -29,6 +29,11 @@ def file_stmode(file):
   mode = os.stat(file)[stat.ST_MODE]
   return oct(mode & 0777)
 
+def checkfile(file):
+  if not os.path.exists(file):
+    mayday("checkexe: os.path.exists says file not there (%s)" % file)
+  return file_stmode(file)
+
 def checkexe(exe):
   if not os.path.exists(exe):
     mayday("checkexe: os.path.exists says file not there (%s)" % exe)
@@ -37,3 +42,5 @@ def checkexe(exe):
   if int(stmode) < 700:
     mayday("checkexe: file (%s) may not be executable stmode=%s" % (exe, stmode))
   return stmode
+
+class NullObject( object ): pass

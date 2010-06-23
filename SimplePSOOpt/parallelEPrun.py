@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os, sys
+import os, sys, pdb
 from optparse import OptionParser
 #import subprocess
 import epopt
@@ -30,6 +30,7 @@ os.chdir(dir)
 print "  running parallelEPrun.py in dir="+os.getcwd()
 
 # might keep this command fixed, and have prepareDirs always link/copy a ./ep in here
+
 os.system("python ./ss >& Results.txt")
 
 os.chdir("..")

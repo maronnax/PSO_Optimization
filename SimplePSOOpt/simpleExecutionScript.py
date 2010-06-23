@@ -6,11 +6,14 @@ def calculateFunction( array_of_values ):
     return (euclidean ** .5) * ( 2 * alpha * math.sin(euclidean))
 
 def doMain():
-
     try:
         vars = []
 
         lines = open("Params.txt").readlines()
+
+        if lines[0].startswith("NOOP"):
+            sys.stdout.write("1\n")
+
         vars = [ float(line.split(":")[1]) for line in lines]
 
         sys.stdout.write("0\n")

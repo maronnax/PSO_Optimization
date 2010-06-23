@@ -5,40 +5,16 @@ import math, pdb
 
 from math import sin, sqrt
 
-def func2(particle):
-  sum=0.0
-  for i in range(particle.Ndimensions):
-    sum += particle.position[i]* particle.position[i]
-  avg = math.sin(sum/float(particle.Ndimensions))
-  return avg
-
-def func(particle):
-  sum=0.0
-
-  for i in range(particle.Ndimensions):
-    sum += particle.position[i]
-  avg = sum/float(particle.Ndimensions)
-  val = math.cos(avg) * math.exp(math.sin(avg)) * math.sin(avg)  / 1.5
-  return val
-
-def func( particle ):
-  
-  alpha = 3.0
-
-  x = particle.position[0]
-  y = particle.position[1]
-  z = particle.position[2]
-  a = particle.position[3]
-
-  return (x**2 + y**2 + z**2 + a**2) * 0.25 * (2 + alpha * sin(sqrt(x**2 + y**2 + z**2 + a**2)))
-
 class Particle:
   def __init__(self, positionMinMaxList, c1, c2, Cf):
+
     self.positionMinMaxList=positionMinMaxList
     self.Ndimensions = len(positionMinMaxList)
+
     self.Cf = Cf
     self.c1 = c1
     self.c2 = c2
+
     # missing the dynamic reduction parameters (kappa, d, wd)
     #self.dynamicD = 10
     #self.kappa = 1
@@ -48,16 +24,17 @@ class Particle:
     self.position=[]  # list of positions
     self.bestposition=[]  # list of best positions of all time
     self.velocity=[]  # list of velocities
+
     for minp,maxp in positionMinMaxList:
       rp = uniform(minp,maxp)
       self.position.append(rp)
-      self.bestposition.append(rp)
       velocityMax = Cf*(maxp-minp) # could make this a dynamic variable
       self.velocity.append(uniform(0,velocityMax))
+    else:
+      self.bestposition = self.position[:]
 
-    self.fitvalue = self.evaluateFitness()
+    self.fitvalue = 1e10 # Set with a very high number
     self.bestfitvalue = self.fitvalue  # initialize with first one
-
 
   # update velocity based on Eq 2 in paper
   def updateVelocity(self, bestparticle):    # pass in bestparticle
@@ -87,9 +64,11 @@ class Particle:
   def updateVelocityMax_Inertia(self):
     pass
 
-  # do the real work -- presumably call energyPlus
-  def evaluateFitness(self):
-    return func(self)
+  # Update the fitness fitness.  
+  def setFitness(self, value):
+    self.fitvalue = value
+    self.updateBestFitnessValue(self.fitvalue)
+    return 
 
   # decide if best fitness value & bestpositions need to be updated (currently looking for minimum value)
   def updateBestFitnessValue(self, fitvalue):
@@ -102,7 +81,6 @@ class Particle:
     else:
       self.age = self.age + 1
           
-      
   def __str__(self):
     s=""
     for i in range(len(self.positionMinMaxList)):
