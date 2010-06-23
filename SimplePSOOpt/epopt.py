@@ -9,7 +9,7 @@ def epexecutable():
   #return "/global/homes/n/ndk/energyplus/src/ep"
 
 def simple_executable():
-  return "/Users/naddy/Work/Building_Optimization_Project_36601F/PSOOptimization/simple_parallel_pso/simpleExecutionScript.py"
+  return "./simpleExecutionScript.py"
 
 def idfname(rank):
   return "../in.idf"
