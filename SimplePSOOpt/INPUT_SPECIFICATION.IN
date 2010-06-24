@@ -1,6 +1,9 @@
-NumParticles: 3000
-MaxIterations: 1000
-MaxConstantIterations: 100
+NumParticles: 20
+MaxIterations: 2
+
+# These two can also be present, or omitted and well be off by default in the simulation
+# MaxConstantBestParticleIterations: 100
+# MaxConstantBestSolutionIterations: 100
 
 Parameters:
 Name_1:  0,10
