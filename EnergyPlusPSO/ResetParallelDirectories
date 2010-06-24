@@ -1,0 +1,5 @@
+#!/bin/bash
+
+rm -fr r00*
+rm -f Particle.Dat
+rm -f ParticlePositions.csv
