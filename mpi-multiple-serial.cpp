@@ -48,7 +48,7 @@ main(int argc, char* argv[]) {
     iteration++;
 
     if (iteration >= max_iterations) {
-      if (rank==0) cout << " Stopping: iterations reached maximum " << iteration << endl;
+      if (rank==0) cout << " Stopping: parallel simulation series iteration reached maximum " << iteration << endl;
       finished=true;
     }
 
