@@ -20,7 +20,7 @@ main(int argc, char* argv[]) {
   int max_iterations = 2000;
   bool finished=false;
   char command[180];
-  int command_rv, scoop_rv;
+  int command_rv, scoop_rv, finalize_rv;
   int iteration=0;
   
   while (!finished) {
@@ -56,6 +56,13 @@ main(int argc, char* argv[]) {
       if (rank==0) cout << " Stopping: serialScoop.py has requested we stop " << endl;
       finished=true;
     }
+
+  }
+
+  if (rank == 0)
+  {
+    sprintf(command,"./serialFinalize.py %d", number_procs);
+    finalize_rv=system(command);
   }
 
   MPI_Finalize();

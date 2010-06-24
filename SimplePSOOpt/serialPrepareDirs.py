@@ -95,6 +95,7 @@ else:
 epopt.checkexe(epopt.simple_executable())
 epopt.checkexe("./parallelEPrun.py")
 epopt.checkexe("./serialScoop.py")
+epopt.checkexe("./serialFinalize.py")
 epopt.checkexe("./a.out")  # the simple C++ executable
 
 # 
@@ -123,7 +124,7 @@ NConstantIterations = run_params["MaxConstantIterations"]
 # Initial values for velocity updating params.  
 c1 = 2.0
 c2 = 2.0
-Cf = 0.5 # Max speed of the particle in any particular dimension is 
+Cf = 0.2 # Max speed of the particle in any particular dimension is 
          # Cf * (param_range_max - param_range_min) in that dimension.
 
 
@@ -138,7 +139,10 @@ positionMinMaxList = [parameters[k] for k in canonical_keys]
 
 pso_data = NullObject()
 
+pso_data.Ns = 5.0 # Paramaters for the dynamic inertia components 
+pso_data.wi = 1.0 # Paramaters for the dynamic inertia components 
 pso_data.Nranks = Nranks
+pso_data.current_iteration = 0
 pso_data.max_iterations = NIterations
 pso_data.max_constant_iterations = NConstantIterations
 

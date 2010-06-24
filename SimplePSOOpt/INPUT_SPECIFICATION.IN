@@ -1,4 +1,4 @@
-NumParticles: 10
+NumParticles: 3000
 MaxIterations: 1000
 MaxConstantIterations: 100
 

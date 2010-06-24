@@ -30,6 +30,8 @@ if print_args:
   if len(args) > 0:
     print "unparsed opt: ", args
 
+print "Running SerialScrape with n = %s" % args[0]
+
 dirList=[]
 if len(args) == 0 and inp.specific_dir>-1:
   # looking in one specific dir
@@ -80,7 +82,7 @@ for dir_ndx, idir in enumerate(dirList):
     break
 
   value = float(lines[1])
-  print "    Particle %d value = %.3f" % (len(pso_data.current_particle_results), value)
+  print "    Particle %d fitness = %f" % (len(pso_data.current_particle_results), value)
   pso_data.current_particle_results.append( value )
   # Set particle fiteness at the same time
   os.chdir("..")
@@ -91,9 +93,40 @@ for dir_ndx, idir in enumerate(dirList):
 # and velocities.
 # 
 
+updates_c1 = []
+updates_c2 = []
+
 if len(pso_data.current_particle_results) == len(pso_data.particle_list):
 
-  print "Done with an iteration"
+  pso_data.current_iteration += 1
+  print "Iteration %d" % pso_data.current_iteration
+
+  if pso_data.current_iteration % 50 == 0:
+      # This is the part where we update some or all of the particle
+      # intertia, c1 (fraction of attraction towards the best position
+      # in param space this particle has seen), c2 (fraction of
+      # attraction towards the best position any particle has ever
+      # seen), Cf, which is the max_speed conversion factor.
+    pso_data.Ns += 1
+
+    old_inertia = pso_data.particle_list[0].w_inertia
+    old_cf = 1.0 / (pso_data.Ns - 1)
+
+    new_inertia = .9 * old_inertia
+    new_cf = 1.0 / (pso_data.Ns)
+
+    print "Updating Global Particle Swarm Parameters Cf w_intertia."
+    print "(cf, w): (%.5f, %.5f) -> (%.5f, %.5f)" % (old_inertia, old_cf, new_inertia, new_cf)
+
+    # Go through and update each particle's inertia, 
+    for particle in pso_data.particle_list:
+      # Update the particle's intertia
+      particle.w_inertia = .9 * particle.w_inertia
+
+      Cf = 1.0 / pso_data.Ns 
+      for dim in xrange(particle.Ndimensions):
+        minp, maxp = particle.positionMinMaxList[dim]
+        particle.velocityMax[dim] = Cf * (maxp - minp)
 
   print "Updating particle velocities and positions."
   # Update each of the particles with the record of how it's done.
@@ -104,10 +137,11 @@ if len(pso_data.current_particle_results) == len(pso_data.particle_list):
 
   print "Updated Positions:"
   for p_ndx, particle in enumerate(pso_data.particle_list):
+
+    print "Particle %d Pre: \n\tPosition - %s, \n\tVelocity - %s" % (p_ndx, particle.position, particle.velocity)
     particle.updateVelocity(bestparticle)
     particle.updatePosition()
-
-    print "Particle %d: \n\tPosition - %s, \nt\tVelocity - %s" % (p_ndx, particle.position, particle.velocity)
+    print "Particle %d Post: \n\tPosition - %s, \n\tVelocity - %s" % (p_ndx, particle.position, particle.velocity)
 
   pso_data.current_particle_results = []
 
@@ -147,6 +181,7 @@ pickleToFilename( pso_data, "Particle.Dat")
     
 # however success is determined, this is one way to send info back to C++
 success=True
+print "End serial scrape"
 if success:
   exit(0)
 else:
